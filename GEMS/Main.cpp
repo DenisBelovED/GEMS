@@ -5,7 +5,7 @@
 int main(int, char**)
 {
 	if ((bool)SDL_Init(SDL_INIT_EVERYTHING))
-		throw "ERROR: SDL unavailable";
+		return -1;
 
 	// TODO shared_ptr
 	GameModel* model = new GameModel();
