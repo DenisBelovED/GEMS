@@ -12,11 +12,10 @@ class GameView
 public:
 	GameView();
 	~GameView();
-	void to_render(SDL_Surface img);
-
-	std::map<size_t, SDL_Surface*>* texture_map;
+	void to_render(size_t texture_id, const SDL_Rect* dst_rect = NULL);
+	SDL_Texture* get_texture(size_t texture_id);
 private:
-	SDL_Window* window;
-	SDL_Renderer* render;
-	SDL_Texture* texture;
+	std::map<size_t, SDL_Texture*>* texture_map = nullptr;
+	SDL_Window* window = nullptr;
+	SDL_Renderer* render = nullptr;
 };
