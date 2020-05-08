@@ -11,6 +11,7 @@ class GameModel
 public:
 	GameModel();
 	~GameModel();
+	const std::vector<std::vector<Node*>>* get_field();
 private:
 	size_t score;
 	std::vector<std::vector<Node*>> color_matrix;

@@ -11,16 +11,15 @@ GameController::~GameController()
 void GameController::game_loop(GameModel* model, GameView* view)
 {
 	bool LOOP_FLAG = true;
-	int i = 0;
 	while (LOOP_FLAG)
 	{
-		SDL_Rect background_RECT;
-		background_RECT.x = 10;
-		background_RECT.y = 10;
-		background_RECT.w = 64;
-		background_RECT.h = 64;
-		i = (i % 4) + 1;
-		view->to_render(i, &background_RECT);
+		view->add_to_rendering_queue(1);
+		SDL_Rect rect;
+		rect.x = 10;
+		rect.y = 10;
+		rect.w = BRIK_WIDTH;
+		rect.h = BRIK_HEIGHT;
+		view->add_to_rendering_queue(2, &rect);
 		if (SDL_PollEvent(&windowEvent))
 			switch (windowEvent.type)
 			{
@@ -28,5 +27,6 @@ void GameController::game_loop(GameModel* model, GameView* view)
 				LOOP_FLAG = false;
 				break;
 			}
+		view->draw();
 	}
 }

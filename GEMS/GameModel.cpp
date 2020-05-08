@@ -38,6 +38,11 @@ GameModel::~GameModel()
 {
 }
 
+const std::vector<std::vector<Node*>>* GameModel::get_field()
+{
+	return &color_matrix;
+}
+
 bool GameModel::moves_exist()
 {
 	if (components->get_count() <= 1)

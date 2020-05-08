@@ -30,6 +30,8 @@ GameView::GameView()
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 #endif // _DEBUG
 
+	render_queue = new std::queue<std::tuple<size_t, const SDL_Rect*>>();
+
 	wchar_t buffer_path[MAX_PATH];
 	GetModuleFileName(NULL, buffer_path, MAX_PATH);
 	std::wstring path_to_exe(buffer_path);
@@ -65,22 +67,28 @@ GameView::GameView()
 
 GameView::~GameView()
 {
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(render);
 	for (auto& link : *texture_map)
 		SDL_DestroyTexture(link.second);
 	delete texture_map;
+	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(render);
 }
 
-void GameView::to_render(size_t texture_id, const SDL_Rect* dst_rect)
+void GameView::draw()
 {
 	SDL_RenderClear(render);
-
-	// TODO split metod into render() and add_to_rendering() 
-	SDL_RenderCopy(render, get_texture(texture_id), NULL, dst_rect);
-	
+	while (!render_queue->empty())
+	{
+		auto tuple = render_queue->front();
+		render_queue->pop();
+		SDL_RenderCopy(render, get_texture(std::get<0>(tuple)), NULL, std::get<1>(tuple));
+	}
 	SDL_RenderPresent(render);
-	//SDL_Delay(15);
+}
+
+void GameView::add_to_rendering_queue(size_t texture_id, const SDL_Rect* dst_rect)
+{
+	render_queue->push(std::tuple<size_t, const SDL_Rect*>(texture_id, dst_rect));
 }
 
 SDL_Texture* GameView::get_texture(size_t texture_id)
