@@ -1,6 +1,4 @@
-#include "GameModel.h"
-#include "GameController.h"
-#include "GameView.h"
+#include "utilities.h"
 
 int main(int, char**)
 {
@@ -12,7 +10,7 @@ int main(int, char**)
 	GameView* view = new GameView();
 	GameController* controller = new GameController();
 	
-	controller->game_loop(model, view);
+	game_loop(model, view, controller);
 
 	delete model;
 	delete view;

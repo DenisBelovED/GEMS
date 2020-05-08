@@ -1,6 +1,4 @@
 #include "GameModel.h"
-#include <random>
-#include <chrono>
 
 GameModel::GameModel()
 {

@@ -1,15 +1,14 @@
 #pragma once
 
 #include "Constants.h"
-#include "GameModel.h"
-#include "GameView.h"
+#include <SDL.h>
 
 class GameController
 {
 public:
 	GameController();
 	~GameController();
-	void game_loop(GameModel* model, GameView* view);
-private:
-	SDL_Event windowEvent;
+
+	enum size_t { background = 0, char1, char2, char3, char4, cell };
+	SDL_Event* windowEvent = nullptr;
 };
