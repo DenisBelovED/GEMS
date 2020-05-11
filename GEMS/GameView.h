@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <Windows.h>
 #include <string>
 #include <filesystem>
@@ -15,10 +16,12 @@ class GameView
 public:
 	GameView();
 	~GameView();
+	void clear_render();
 	void rendering_all();
 	void add_to_rendering_queue(ViewEntity* ve);
 	void rendering_entity(ViewEntity* ve);
 	SDL_Texture* get_texture(size_t texture_id);
+	void rendering_score(int score);
 
 	ViewEntity* background_view = nullptr;
 	ViewEntity* restart_view = nullptr;
@@ -31,10 +34,13 @@ private:
 		{"char2", 2},
 		{"char3", 3},
 		{"char4", 4},
-		{"cell", 5}
+		{"cell", 5},
+		{"glass", 6},
+		{"glass_lime", 7}
 	};
 	std::queue<ViewEntity*>* render_queue = nullptr;
 	std::map<size_t, SDL_Texture*>* texture_map = nullptr;
+	TTF_Font* font = nullptr;
 	SDL_Window* window = nullptr;
 	SDL_Renderer* render = nullptr;
 };

@@ -47,8 +47,10 @@ std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height)
 void game_loop(GameModel* model, GameView* view, GameController* controller)
 {
 	bool LOOP_FLAG = true;
-	
+
 	// Инициализация отображений, и их первичная отрисовка
+	view->clear_render();
+
 	view->background_view = new ViewBrik(
 		std::vector<size_t>() = { controller->background },
 		0, 0, WIDTH, HEIGHT
@@ -69,7 +71,9 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 			view->add_to_rendering_queue((*view->field_view)[w][h]);
 		}
 	}
+
 	view->rendering_all();
+	view->rendering_score(model->get_score());
 
 	int
 		click_w = -1,
@@ -92,8 +96,9 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 					{
 						click_w = pair.first, click_h = pair.second;
 						available_briks = accessible_neighbors(click_w, click_h);
+
 						(*view->field_view)[click_w][click_h]->push_in_render_stack(
-							controller->cell, //TODO 
+							controller->glass_lime,
 							init_shared_rect(
 								click_w * BRIK_WIDTH + BIAS_X,
 								click_h * BRIK_HEIGHT + BIAS_Y,
@@ -101,7 +106,23 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 								BRIK_HEIGHT
 							)
 						);
-						view->rendering_entity((*view->field_view)[click_w][click_h]);
+						view->add_to_rendering_queue((*view->field_view)[click_w][click_h]);
+
+						for (auto& pair : *available_briks)
+						{
+							(*view->field_view)[pair.first][pair.second]->push_in_render_stack(
+								controller->glass,
+								init_shared_rect(
+									pair.first * BRIK_WIDTH + BIAS_X,
+									pair.second * BRIK_HEIGHT + BIAS_Y,
+									BRIK_WIDTH,
+									BRIK_HEIGHT
+								)
+							);
+							view->add_to_rendering_queue((*view->field_view)[pair.first][pair.second]);
+						}
+
+						view->rendering_all();
 					}
 				}
 				else
@@ -110,8 +131,18 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 					if ((pair.first == click_w) && (pair.second == click_h))
 					{
 						(*view->field_view)[click_w][click_h]->pop_from_render_stack();
-						view->rendering_entity((*view->field_view)[click_w][click_h]);
+						view->add_to_rendering_queue((*view->field_view)[click_w][click_h]);
+						
+						for (auto& pair : *available_briks)
+						{
+							(*view->field_view)[pair.first][pair.second]->pop_from_render_stack();
+							view->add_to_rendering_queue((*view->field_view)[pair.first][pair.second]);
+						}
+
+						view->rendering_all();
+							
 						click_w = -1, click_h = -1;
+						available_briks->clear();
 						available_briks = nullptr;
 					}
 				}
@@ -122,7 +153,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 				{
 					// TODO restart
 				}*/
-
+				view->rendering_score(model->get_score());
 				break;
 			case SDL_QUIT:
 				LOOP_FLAG = false;

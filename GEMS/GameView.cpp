@@ -6,6 +6,8 @@
 
 GameView::GameView()
 {
+	int st = TTF_Init();
+
 	window = SDL_CreateWindow(
 		"GEMS",
 		100,
@@ -40,8 +42,19 @@ GameView::GameView()
 	std::wstring path_to_exe(buffer_path);
 
 	auto texture_pack_dir = path_to_exe.substr(0, path_to_exe.rfind('\\')).append(L"\\textures");
+	auto font_dir = path_to_exe.substr(0, path_to_exe.rfind('\\')).append(L"\\fonts");
 
 	texture_map = new std::map<size_t, SDL_Texture*>();
+
+	for (auto& f_name : std::filesystem::directory_iterator(font_dir))
+	{
+		font = TTF_OpenFont(f_name.path().string().c_str(), FONT_SIZE);
+
+#ifdef _DEBUG
+		if (font == nullptr)
+			std::cout << "TTF_OpenFont Error: " << SDL_GetError() << std::endl;
+#endif // _DEBUG
+	}
 
 	for (auto& t_name : std::filesystem::directory_iterator(texture_pack_dir))
 	{
@@ -67,13 +80,19 @@ GameView::~GameView()
 	for (auto& link : *texture_map)
 		SDL_DestroyTexture(link.second);
 	delete texture_map;
+	TTF_CloseFont(font);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(render);
+	TTF_Quit();
+}
+
+void GameView::clear_render()
+{
+	SDL_RenderClear(render);
 }
 
 void GameView::rendering_all()
 {
-	SDL_RenderClear(render);
 	while (!render_queue->empty())
 	{
 		for (auto& tuple : *(render_queue->front()->get_ordered_content()))
@@ -98,4 +117,29 @@ void GameView::rendering_entity(ViewEntity* ve)
 SDL_Texture* GameView::get_texture(size_t texture_id)
 {
 	return (*texture_map)[texture_id];
+}
+
+void GameView::rendering_score(int score) // TODO fix memory leak
+{
+	std::string s("Score: ");
+	s.append(std::to_string(score));
+
+	SDL_Color c;
+	c.a = 255;
+	c.r = 255;
+	c.g = 104;
+	c.b = 0;
+
+	SDL_Surface* f_s = TTF_RenderText_Blended(font, s.c_str(), c);
+	SDL_Texture* f_t = SDL_CreateTextureFromSurface(render, f_s);
+	SDL_FreeSurface(f_s);
+
+	SDL_Rect r;
+	r.x = SCORE_X;
+	r.y = SCORE_Y;
+	r.w = SCORE_W;
+	r.h = SCORE_H;
+
+	SDL_RenderCopy(render, f_t, NULL, &r);
+	SDL_RenderPresent(render);
 }

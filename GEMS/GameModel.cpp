@@ -41,6 +41,11 @@ GameModel::~GameModel()
 	delete components;
 }
 
+size_t GameModel::get_score()
+{
+	return score;
+}
+
 bool GameModel::moves_exist()
 {
 	if (components->get_count() <= 1)

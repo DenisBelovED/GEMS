@@ -9,4 +9,9 @@ const int
 	BIAS_X = 30,
 	BIAS_Y = 30,
 	BRIK_WIDTH = 54,
-	BRIK_HEIGHT = 54;
+	BRIK_HEIGHT = 54,
+	FONT_SIZE = 64,
+	SCORE_X = 650,
+	SCORE_Y = 200,
+	SCORE_W = 230,
+	SCORE_H = 60;

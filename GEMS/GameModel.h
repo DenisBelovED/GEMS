@@ -12,6 +12,7 @@ class GameModel
 public:
 	GameModel();
 	~GameModel();
+	size_t get_score();
 
 	std::vector<std::vector<Node*>>* color_matrix = nullptr;
 private:
