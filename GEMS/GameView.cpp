@@ -119,7 +119,7 @@ SDL_Texture* GameView::get_texture(size_t texture_id)
 	return (*texture_map)[texture_id];
 }
 
-void GameView::rendering_score(int score) // TODO fix memory leak
+void GameView::rendering_score(int score)
 {
 	std::string s("Score: ");
 	s.append(std::to_string(score));
@@ -130,16 +130,17 @@ void GameView::rendering_score(int score) // TODO fix memory leak
 	c.g = 104;
 	c.b = 0;
 
-	SDL_Surface* f_s = TTF_RenderText_Blended(font, s.c_str(), c);
-	SDL_Texture* f_t = SDL_CreateTextureFromSurface(render, f_s);
-	SDL_FreeSurface(f_s);
-
 	SDL_Rect r;
 	r.x = SCORE_X;
 	r.y = SCORE_Y;
 	r.w = SCORE_W;
 	r.h = SCORE_H;
 
+	SDL_Surface* f_s = TTF_RenderText_Blended(font, s.c_str(), c);
+	SDL_Texture* f_t = SDL_CreateTextureFromSurface(render, f_s);
+
+	SDL_FreeSurface(f_s);
 	SDL_RenderCopy(render, f_t, NULL, &r);
 	SDL_RenderPresent(render);
+	SDL_DestroyTexture(f_t);
 }
