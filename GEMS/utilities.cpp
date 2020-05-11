@@ -24,44 +24,41 @@ void accessible_neighbors(
 		accessible_nodes->push_back(nodes[current_node->_y + 1][current_node->_x]);
 }
 
-std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height)
-{
-	SDL_Rect* r = new SDL_Rect();
-	r->x = x;
-	r->y = y;
-	r->w = width;
-	r->h = height;
-	return std::shared_ptr<SDL_Rect>(r);
-}
-
 void game_loop(GameModel* model, GameView* view, GameController* controller)
 {
 	bool LOOP_FLAG = true;
-	auto field = model->get_field();
 	
-	view->add_to_rendering_queue(controller->background, init_shared_rect(0, 0, WIDTH, HEIGHT));
+	// Инициализация отображений, и их первичная отрисовка
+	view->background_view = new ViewBrik(
+		std::vector<size_t>() = { controller->background },
+		0, 0, WIDTH, HEIGHT
+	);
+	view->add_to_rendering_queue(view->background_view);
+	
 	for (int h = 0; h < G_HEIGHT; h++)
 	{
 		for (int w = 0; w < G_WIDTH; w++)
 		{
-			auto rect_ptr1 = init_shared_rect(
+			(*view->field_view)[w][h] = new ViewBrik(
+				std::vector<size_t>() = { controller->cell, (*model->color_matrix)[w][h]->_color },
 				w * BRIK_WIDTH + BIAS_X,
 				h * BRIK_HEIGHT + BIAS_Y,
 				BRIK_WIDTH,
 				BRIK_HEIGHT
 			);
-			std::shared_ptr<SDL_Rect> rect_ptr2(rect_ptr1);
-			view->add_to_rendering_queue(controller->cell, rect_ptr1);
-			view->add_to_rendering_queue((*field)[w][h]->_color, rect_ptr2);
+			view->add_to_rendering_queue((*view->field_view)[w][h]);
 		}
 	}
-	view->draw();
+	view->rendering_all();
 
 	while (LOOP_FLAG)
 	{
 		if (SDL_PollEvent(controller->windowEvent))
 			switch (controller->windowEvent->type)
 			{
+			case SDL_MOUSEBUTTONDOWN:
+				// TODO
+				break;
 			case SDL_QUIT:
 				LOOP_FLAG = false;
 				break;

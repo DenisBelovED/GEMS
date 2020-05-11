@@ -8,7 +8,7 @@ class ConnectivityComponents
 {
 public:
 	ConnectivityComponents();
-	ConnectivityComponents(std::vector<std::vector<Node*>>& nodes);
+	ConnectivityComponents(std::vector<std::vector<Node*>>* nodes);
 	~ConnectivityComponents();
 	size_t get_count();
 	size_t get_component_length(Node* n);

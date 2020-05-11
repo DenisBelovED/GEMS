@@ -30,7 +30,10 @@ GameView::GameView()
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 #endif // _DEBUG
 
-	render_queue = new std::queue<std::tuple<size_t, std::shared_ptr<SDL_Rect>>>();
+	render_queue = new std::queue<ViewEntity*>();
+	field_view = new std::vector<std::vector<ViewEntity*>>(G_HEIGHT);
+	for (size_t i = 0; i < G_HEIGHT; i++)
+		(*field_view)[i] = std::vector<ViewEntity*>(G_WIDTH);
 
 	wchar_t buffer_path[MAX_PATH];
 	GetModuleFileName(NULL, buffer_path, MAX_PATH);
@@ -55,6 +58,12 @@ GameView::GameView()
 
 GameView::~GameView()
 {
+	delete background_view;
+	delete restart_view;
+	delete score_view;
+	for (auto& e : *field_view)
+		for (auto& n : e)
+			delete n;
 	for (auto& link : *texture_map)
 		SDL_DestroyTexture(link.second);
 	delete texture_map;
@@ -62,21 +71,28 @@ GameView::~GameView()
 	SDL_DestroyRenderer(render);
 }
 
-void GameView::draw()
+void GameView::rendering_all()
 {
 	SDL_RenderClear(render);
 	while (!render_queue->empty())
 	{
-		auto tuple = render_queue->front();
+		for (auto& tuple : *(render_queue->front()->get_ordered_content()))
+			SDL_RenderCopy(render, get_texture(std::get<0>(tuple)), NULL, &(*(std::get<1>(tuple))));
 		render_queue->pop();
-		SDL_RenderCopy(render, get_texture(std::get<0>(tuple)), NULL, &(*(std::get<1>(tuple))));
 	}
 	SDL_RenderPresent(render);
 }
 
-void GameView::add_to_rendering_queue(size_t texture_id, std::shared_ptr<SDL_Rect> dst_rect)
+void GameView::add_to_rendering_queue(ViewEntity* ve)
 {
-	render_queue->push(std::tuple<size_t, std::shared_ptr<SDL_Rect>>(texture_id, dst_rect));
+	render_queue->push(ve);
+}
+
+void GameView::rendering_entity(ViewEntity* ve)
+{
+	for (auto& tuple : *(ve->get_ordered_content()))
+		SDL_RenderCopy(render, get_texture(std::get<0>(tuple)), NULL, &(*(std::get<1>(tuple))));
+	SDL_RenderPresent(render);
 }
 
 SDL_Texture* GameView::get_texture(size_t texture_id)

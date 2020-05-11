@@ -6,9 +6,9 @@ ConnectivityComponents::ConnectivityComponents()
 {
 }
 
-ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>& nodes)
+ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>* nodes)
 {
-	for (auto& line : nodes)
+	for (auto& line : *nodes)
 	{
 		for (auto& node : line)
 		{
@@ -26,7 +26,7 @@ ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>& 
 					component->insert(n);
 
 					auto accessible_nodes = new std::vector<Node*>();
-					accessible_neighbors(n, nodes, accessible_nodes);
+					accessible_neighbors(n, *nodes, accessible_nodes);
 					for (auto n : *accessible_nodes)
 						queue.push(n);
 				}
@@ -39,7 +39,7 @@ ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>& 
 	for (size_t i = 0; i < G_HEIGHT; i++)
 	{
 		for (size_t j = 0; j < G_WIDTH; j++)
-			printf("[%d %d; %d] ", nodes[j][i]->_y, nodes[j][i]->_x, nodes[j][i]->_color);
+			printf("[%d %d; %d] ", (*nodes)[j][i]->_y, (*nodes)[j][i]->_x, (*nodes)[j][i]->_color);
 		printf("\n");
 	}
 	printf("\n%d\n", components.size());

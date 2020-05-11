@@ -4,6 +4,7 @@ GameModel::GameModel()
 {
 	// Обнуление счёта
 	score = 0;
+	color_matrix = new std::vector<std::vector<Node*>>();
 
 	// Создание генератора случайных чисел
 	std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -15,9 +16,9 @@ GameModel::GameModel()
 	{
 		for (size_t i = 0; i < G_HEIGHT; i++)
 		{
-			color_matrix.push_back(std::vector<Node*>());
+			color_matrix->push_back(std::vector<Node*>());
 			for (size_t j = 0; j < G_WIDTH; j++)
-				color_matrix[i].push_back(new Node(j, i, color_distribution(rng)));
+				(*color_matrix)[i].push_back(new Node(j, i, color_distribution(rng)));
 		}
 
 		components = new ConnectivityComponents(color_matrix);
@@ -26,7 +27,7 @@ GameModel::GameModel()
 			break;
 		else
 		{
-			color_matrix.clear();
+			color_matrix->clear();
 			delete components;
 		}
 	}
@@ -34,11 +35,10 @@ GameModel::GameModel()
 
 GameModel::~GameModel()
 {
-}
-
-const std::vector<std::vector<Node*>>* GameModel::get_field()
-{
-	return &color_matrix;
+	for (auto& e : *color_matrix)
+		for (auto& n : e)
+			delete n;
+	delete components;
 }
 
 bool GameModel::moves_exist()
@@ -49,20 +49,20 @@ bool GameModel::moves_exist()
 		for (Node* n : *component)
 		{
 			if ((0 < n->_x) &&
-				(color_matrix[n->_y][n->_x - 1]->_color != n->_color) &&
-				(swapable(n, color_matrix[n->_y][n->_x - 1])))
+				((*color_matrix)[n->_y][n->_x - 1]->_color != n->_color) &&
+				(swapable(n, (*color_matrix)[n->_y][n->_x - 1])))
 				return true;
 			if ((n->_x < (G_WIDTH - 1)) &&
-				(color_matrix[n->_y][n->_x + 1]->_color != n->_color) &&
-				(swapable(n, color_matrix[n->_y][n->_x + 1])))
+				((*color_matrix)[n->_y][n->_x + 1]->_color != n->_color) &&
+				(swapable(n, (*color_matrix)[n->_y][n->_x + 1])))
 				return true;
 			if ((0 < n->_y) &&
-				(color_matrix[n->_y - 1][n->_x]->_color != n->_color) &&
-				(swapable(n, color_matrix[n->_y - 1][n->_x])))
+				((*color_matrix)[n->_y - 1][n->_x]->_color != n->_color) &&
+				(swapable(n, (*color_matrix)[n->_y - 1][n->_x])))
 				return true;
 			if ((n->_y < (G_HEIGHT - 1)) &&
-				(color_matrix[n->_y + 1][n->_x]->_color != n->_color) &&
-				(swapable(n, color_matrix[n->_y + 1][n->_x])))
+				((*color_matrix)[n->_y + 1][n->_x]->_color != n->_color) &&
+				(swapable(n, (*color_matrix)[n->_y + 1][n->_x])))
 				return true;
 		}
 	return false;
@@ -85,20 +85,20 @@ bool GameModel::swapable(Node* node1, Node* node2)
 bool GameModel::is_explosive_touch(const Node* node)
 {
 	if ((0 < node->_x) &&
-		(color_matrix[node->_y][node->_x - 1]->_color == node->_color) &&
-		(components->get_component_length(color_matrix[node->_y][node->_x - 1]) > 1))
+		((*color_matrix)[node->_y][node->_x - 1]->_color == node->_color) &&
+		(components->get_component_length((*color_matrix)[node->_y][node->_x - 1]) > 1))
 		return true;
 	if ((node->_x < (G_WIDTH - 1)) &&
-		(color_matrix[node->_y][node->_x + 1]->_color == node->_color) &&
-		(components->get_component_length(color_matrix[node->_y][node->_x + 1]) > 1))
+		((*color_matrix)[node->_y][node->_x + 1]->_color == node->_color) &&
+		(components->get_component_length((*color_matrix)[node->_y][node->_x + 1]) > 1))
 		return true;
 	if ((0 < node->_y) &&
-		(color_matrix[node->_y - 1][node->_x]->_color == node->_color) &&
-		(components->get_component_length(color_matrix[node->_y - 1][node->_x]) > 1))
+		((*color_matrix)[node->_y - 1][node->_x]->_color == node->_color) &&
+		(components->get_component_length((*color_matrix)[node->_y - 1][node->_x]) > 1))
 		return true;
 	if ((node->_y < (G_HEIGHT - 1)) &&
-		(color_matrix[node->_y + 1][node->_x]->_color == node->_color) &&
-		(components->get_component_length(color_matrix[node->_y + 1][node->_x]) > 1))
+		((*color_matrix)[node->_y + 1][node->_x]->_color == node->_color) &&
+		(components->get_component_length((*color_matrix)[node->_y + 1][node->_x]) > 1))
 		return true;
 	return false;
 }

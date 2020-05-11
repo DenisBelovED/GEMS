@@ -166,6 +166,8 @@
     <ClInclude Include="GameView.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="utilities.h" />
+    <ClInclude Include="ViewBrik.h" />
+    <ClInclude Include="ViewEntity.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
