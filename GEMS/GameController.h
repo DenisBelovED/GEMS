@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Constants.h"
+#include "ViewEntity.h"
+#include <utility>
 #include <SDL.h>
 
 class GameController
@@ -8,7 +10,7 @@ class GameController
 public:
 	GameController();
 	~GameController();
-	
+	std::pair<int, int> search_strike(std::vector<std::vector<ViewEntity*>>* field_view);
 
 	enum size_t { background = 0, char1, char2, char3, char4, cell };
 	size_t 

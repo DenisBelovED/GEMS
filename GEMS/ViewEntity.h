@@ -24,6 +24,7 @@ public:
 		rendering_order->clear();
 		view_rect.~shared_ptr();
 	}
+	virtual bool strike(size_t x, size_t y) = 0;
 protected:
 	ViewEntity() {};
 

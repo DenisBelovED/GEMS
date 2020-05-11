@@ -17,5 +17,10 @@ public:
 		for (auto& texture_id : ordered_texture_ids)
 			push_in_render_stack(texture_id, std::shared_ptr<SDL_Rect>(view_rect));
 	}
-};
 
+	virtual bool strike(size_t x, size_t y) override
+	{
+		return ((*view_rect).x < x) && (x < ((*view_rect).x + (*view_rect).w))
+			&& ((*view_rect).y < y) && (y < ((*view_rect).y + (*view_rect).h));
+	}
+};

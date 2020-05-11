@@ -26,7 +26,7 @@ ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>* 
 					component->insert(n);
 
 					auto accessible_nodes = new std::vector<Node*>();
-					accessible_neighbors(n, *nodes, accessible_nodes);
+					accessible_eqal_neighbors(n, *nodes, accessible_nodes);
 					for (auto n : *accessible_nodes)
 						queue.push(n);
 				}

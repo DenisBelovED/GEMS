@@ -1,6 +1,6 @@
 #include "utilities.h"
 
-void accessible_neighbors(
+void accessible_eqal_neighbors(
 	const Node* current_node,
 	const std::vector<std::vector<Node*>>& nodes,
 	std::vector<Node*>* accessible_nodes
@@ -22,6 +22,26 @@ void accessible_neighbors(
 		(!nodes[current_node->_y + 1][current_node->_x]->visited) &&
 		(nodes[current_node->_y + 1][current_node->_x]->_color == current_node->_color))
 		accessible_nodes->push_back(nodes[current_node->_y + 1][current_node->_x]);
+}
+
+std::vector<std::pair<int, int>>* accessible_neighbors(int x, int y)
+{
+	auto v = new std::vector<std::pair<int, int>>();
+	if (0 < x) v->push_back(std::pair<int, int>(x - 1, y));
+	if (x < (G_WIDTH - 1)) v->push_back(std::pair<int, int>(x + 1, y));
+	if (0 < y) v->push_back(std::pair<int, int>(x, y - 1));
+	if (y < (G_HEIGHT - 1)) v->push_back(std::pair<int, int>(x, y + 1));
+	return v;
+}
+
+std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height)
+{
+	SDL_Rect* r = new SDL_Rect();
+	r->x = x;
+	r->y = y;
+	r->w = width;
+	r->h = height;
+	return std::shared_ptr<SDL_Rect>(r);
 }
 
 void game_loop(GameModel* model, GameView* view, GameController* controller)
@@ -51,13 +71,58 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 	}
 	view->rendering_all();
 
+	int
+		click_w = -1,
+		click_h = -1;
+	std::vector<std::pair<int, int>>* available_briks = nullptr;
+
 	while (LOOP_FLAG)
 	{
 		if (SDL_PollEvent(controller->windowEvent))
 			switch (controller->windowEvent->type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
-				// TODO
+				if (controller->windowEvent->button.button != SDL_BUTTON_LEFT)
+					break;
+				
+				if (click_w == -1)
+				{
+					auto pair = controller->search_strike(view->field_view);
+					if (pair.first != -1)
+					{
+						click_w = pair.first, click_h = pair.second;
+						available_briks = accessible_neighbors(click_w, click_h);
+						(*view->field_view)[click_w][click_h]->push_in_render_stack(
+							controller->cell, //TODO 
+							init_shared_rect(
+								click_w * BRIK_WIDTH + BIAS_X,
+								click_h * BRIK_HEIGHT + BIAS_Y,
+								BRIK_WIDTH,
+								BRIK_HEIGHT
+							)
+						);
+						view->rendering_entity((*view->field_view)[click_w][click_h]);
+					}
+				}
+				else
+				{
+					auto pair = controller->search_strike(view->field_view);
+					if ((pair.first == click_w) && (pair.second == click_h))
+					{
+						(*view->field_view)[click_w][click_h]->pop_from_render_stack();
+						view->rendering_entity((*view->field_view)[click_w][click_h]);
+						click_w = -1, click_h = -1;
+						available_briks = nullptr;
+					}
+				}
+
+				/*if (view->restart_view->strike(
+					controller->windowEvent->button.x,
+					controller->windowEvent->button.y))
+				{
+					// TODO restart
+				}*/
+
 				break;
 			case SDL_QUIT:
 				LOOP_FLAG = false;

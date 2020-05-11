@@ -10,10 +10,12 @@
 #include "GameController.h"
 #include "ViewBrik.h"
 
-void accessible_neighbors(
+void accessible_eqal_neighbors(
 	const Node* current_node,
 	const std::vector<std::vector<Node*>>& nodes,
 	std::vector<Node*>* accessible_nodes
 );
 
 void game_loop(GameModel* model, GameView* view, GameController* controller);
+
+std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height);
