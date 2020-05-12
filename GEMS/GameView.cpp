@@ -2,6 +2,7 @@
 
 #ifdef _DEBUG
 #include <iostream>
+#include "utilities.h"
 #endif // _DEBUG
 
 GameView::GameView()
@@ -72,7 +73,7 @@ GameView::GameView()
 GameView::~GameView()
 {
 	delete background_view;
-	delete restart_view;
+	//delete restart_view;
 	delete score_view;
 	for (auto& e : *field_view)
 		for (auto& n : e)
@@ -143,4 +144,39 @@ void GameView::rendering_score(int score)
 	SDL_RenderCopy(render, f_t, NULL, &r);
 	SDL_RenderPresent(render);
 	SDL_DestroyTexture(f_t);
+}
+
+void GameView::synchronize(
+	std::vector<std::vector<Node*>>* color_matrix, 
+	size_t score,
+	std::vector<std::pair<int, int>>* selected_briks
+)
+{
+	for (auto& pair : *selected_briks)
+		(*field_view)[pair.first][pair.second]->pop_from_render_stack();
+	SDL_RenderClear(render);
+	add_to_rendering_queue(background_view);
+	for (int h = 0; h < G_HEIGHT; h++)
+		for (int w = 0; w < G_WIDTH; w++)
+		{
+			// TODO animation
+			if ((*color_matrix)[w][h]->_color == EXPLOSION)
+			{
+				(*field_view)[w][h]->clear_render_stack();
+				(*field_view)[w][h]->push_in_render_stack(
+					5,
+					init_shared_rect(
+						w * BRIK_WIDTH + BIAS_X,
+						h * BRIK_HEIGHT + BIAS_Y,
+						BRIK_WIDTH,
+						BRIK_HEIGHT
+					)
+				);
+			}
+			else
+				(*field_view)[w][h]->change_top_texture((*color_matrix)[w][h]->_color);
+			add_to_rendering_queue((*field_view)[w][h]);
+		}
+	rendering_all();
+	rendering_score(score);
 }

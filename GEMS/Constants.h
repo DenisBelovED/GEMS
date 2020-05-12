@@ -14,4 +14,5 @@ const int
 	SCORE_X = 650,
 	SCORE_Y = 200,
 	SCORE_W = 230,
-	SCORE_H = 60;
+	SCORE_H = 60,
+	EXPLOSION = 9999;

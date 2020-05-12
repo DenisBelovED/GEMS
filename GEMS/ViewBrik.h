@@ -20,7 +20,7 @@ public:
 
 	virtual bool strike(size_t x, size_t y) override
 	{
-		return ((*view_rect).x < x) && (x < ((*view_rect).x + (*view_rect).w))
-			&& ((*view_rect).y < y) && (y < ((*view_rect).y + (*view_rect).h));
+		return ((*view_rect).x < x) && (x < ((size_t)(*view_rect).x + (size_t)(*view_rect).w))
+			&& ((*view_rect).y < y) && (y < ((size_t)(*view_rect).y + (size_t)(*view_rect).h));
 	}
 };

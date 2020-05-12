@@ -46,6 +46,31 @@ size_t GameModel::get_score()
 	return score;
 }
 
+std::vector<Node*>* GameModel::swap(size_t x1, size_t y1, size_t x2, size_t y2)
+{
+	auto node1 = (*color_matrix)[x1][y1];
+	auto node2 = (*color_matrix)[x2][y2];
+	auto explosive = new std::vector<Node*>();
+
+	if (!swapable(node1, node2))
+		return explosive;
+
+	size_t t_color = node2->_color;
+	node2->_color = node1->_color;
+	node1->_color = t_color;
+
+	components->update_components(color_matrix);
+
+	size_t d1 = explosion(node1);
+	size_t d2 = explosion(node2);
+	for (auto& n : *components->get_component_by_node(node1))
+		explosive->push_back(n);
+	for (auto& n : *components->get_component_by_node(node2))
+		explosive->push_back(n);
+	score += d1 + d2;
+	return explosive;
+}
+
 bool GameModel::moves_exist()
 {
 	if (components->get_count() <= 1)
@@ -89,21 +114,30 @@ bool GameModel::swapable(Node* node1, Node* node2)
 
 bool GameModel::is_explosive_touch(const Node* node)
 {
+	size_t count = 1;
 	if ((0 < node->_x) &&
-		((*color_matrix)[node->_y][node->_x - 1]->_color == node->_color) &&
-		(components->get_component_length((*color_matrix)[node->_y][node->_x - 1]) > 1))
-		return true;
+		((*color_matrix)[node->_y][node->_x - 1]->_color == node->_color))
+		count += components->get_component_length((*color_matrix)[node->_y][node->_x - 1]);
 	if ((node->_x < (G_WIDTH - 1)) &&
-		((*color_matrix)[node->_y][node->_x + 1]->_color == node->_color) &&
-		(components->get_component_length((*color_matrix)[node->_y][node->_x + 1]) > 1))
-		return true;
+		((*color_matrix)[node->_y][node->_x + 1]->_color == node->_color))
+		count += components->get_component_length((*color_matrix)[node->_y][node->_x + 1]);
 	if ((0 < node->_y) &&
-		((*color_matrix)[node->_y - 1][node->_x]->_color == node->_color) &&
-		(components->get_component_length((*color_matrix)[node->_y - 1][node->_x]) > 1))
-		return true;
+		((*color_matrix)[node->_y - 1][node->_x]->_color == node->_color))
+		count += components->get_component_length((*color_matrix)[node->_y - 1][node->_x]);
 	if ((node->_y < (G_HEIGHT - 1)) &&
-		((*color_matrix)[node->_y + 1][node->_x]->_color == node->_color) &&
-		(components->get_component_length((*color_matrix)[node->_y + 1][node->_x]) > 1))
-		return true;
-	return false;
+		((*color_matrix)[node->_y + 1][node->_x]->_color == node->_color))
+		count += components->get_component_length((*color_matrix)[node->_y + 1][node->_x]);
+	return (count > 2);
+}
+
+size_t GameModel::explosion(Node* node)
+{
+	size_t sc = components->get_component_length(node);
+	if (sc > 2)
+	{
+		for(auto& n : *components->get_component_by_node(node))
+			n->_color = EXPLOSION;
+		return sc;
+	}
+	return 0;
 }

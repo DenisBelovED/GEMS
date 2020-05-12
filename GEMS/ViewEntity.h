@@ -15,6 +15,20 @@ public:
 	{
 		rendering_order->pop_back();
 	}
+	void clear_render_stack()
+	{
+		rendering_order->clear();
+	}
+	void change_top_texture(size_t id_texture)
+	{
+		auto tuple = rendering_order->back();
+		if (id_texture == std::get<0>(tuple))
+			return;
+		rendering_order->pop_back();
+		rendering_order->push_back(
+			std::tuple<size_t, std::shared_ptr<SDL_Rect>>(id_texture, std::get<1>(tuple))
+		);
+	}
 	const std::vector<std::tuple<size_t, std::shared_ptr<SDL_Rect>>>* get_ordered_content()
 	{
 		return rendering_order;

@@ -10,6 +10,7 @@
 #include <queue>
 #include "Constants.h"
 #include "ViewEntity.h"
+#include "Node.h"
 
 class GameView 
 {
@@ -22,9 +23,14 @@ public:
 	void rendering_entity(ViewEntity* ve);
 	SDL_Texture* get_texture(size_t texture_id);
 	void rendering_score(int score);
+	void synchronize(
+		std::vector<std::vector<Node*>>* color_matrix, 
+		size_t score, 
+		std::vector<std::pair<int, int>>* selected_briks
+	);
 
 	ViewEntity* background_view = nullptr;
-	ViewEntity* restart_view = nullptr;
+	// ViewEntity* restart_view = nullptr;
 	ViewEntity* score_view = nullptr;
 	std::vector<std::vector<ViewEntity*>>* field_view = nullptr;
 private:
