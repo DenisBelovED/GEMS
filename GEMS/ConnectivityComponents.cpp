@@ -123,6 +123,12 @@ void ConnectivityComponents::update_components(std::vector<std::vector<Node*>>* 
 #endif // _DEBUG
 }
 
+bool ConnectivityComponents::from_common_component(Node* n1, Node* n2)
+{
+	auto comp = get_component_by_node(n1);
+	return (comp->find(n2) != comp->end());
+}
+
 const std::vector<std::unordered_set<Node*>*>* ConnectivityComponents::get_nodes()
 {
 	return &components;

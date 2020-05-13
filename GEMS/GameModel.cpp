@@ -52,7 +52,7 @@ std::vector<Node*>* GameModel::swap(size_t x1, size_t y1, size_t x2, size_t y2)
 	auto node2 = (*color_matrix)[x2][y2];
 	auto explosive = new std::vector<Node*>();
 
-	if (!swapable(node1, node2))
+	if ((components->from_common_component(node1, node2)) || (!swapable(node1, node2)))
 		return explosive;
 
 	size_t t_color = node2->_color;

@@ -135,7 +135,6 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						((pair.first == (click_w)) && (pair.second == (click_h - 1))) ||
 						((pair.first == (click_w)) && (pair.second == (click_h + 1))))
 					{
-						//TODO bug fix: double click > 2, self click > 2
 						auto explosive_nodes = model->swap(pair.first, pair.second, click_w, click_h);
 						
 						/*(*view->field_view)[click_w][click_h]->pop_from_render_stack();
