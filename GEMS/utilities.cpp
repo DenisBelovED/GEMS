@@ -128,6 +128,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 				else
 				{
 					auto pair = controller->search_strike(view->field_view);
+					available_briks->push_back(std::pair<int, int>(click_w, click_h));
 
 					if (((pair.first == click_w) && (pair.second == click_h)) ||
 						((pair.first == (click_w - 1)) && (pair.second == click_h)) ||
@@ -136,42 +137,29 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						((pair.first == (click_w)) && (pair.second == (click_h + 1))))
 					{
 						auto explosive_nodes = model->swap(pair.first, pair.second, click_w, click_h);
-						
-						/*(*view->field_view)[click_w][click_h]->pop_from_render_stack();
-						view->add_to_rendering_queue((*view->field_view)[click_w][click_h]);
 
-						for (auto& pair : *available_briks)
-						{
-							(*view->field_view)[pair.first][pair.second]->pop_from_render_stack();
-							view->add_to_rendering_queue((*view->field_view)[pair.first][pair.second]);
-						}
-
-						view->rendering_all();*/
-
-						/*for (auto& en : *explosive_nodes)
-						{
-							(*view->field_view)[en->_x][en->_y]->clear_render_stack();
-							(*view->field_view)[en->_x][en->_y]->push_in_render_stack(
-								controller->glass_lime, // TODO explosive animation, physic cycle
-								init_shared_rect(
-									en->_y * BRIK_HEIGHT + BIAS_Y,
-									en->_x * BRIK_WIDTH + BIAS_X,
-									BRIK_WIDTH,
-									BRIK_HEIGHT
-								)
-							);
-							view->add_to_rendering_queue((*view->field_view)[en->_x][en->_y]);
-						}
-						view->rendering_all();
-
-						if ((bool)explosive_nodes->size())
-							view->rendering_score(model->get_score());*/
+						view->synchronize(
+							model->color_matrix,
+							view->field_view,
+							pair.first, pair.second,
+							click_w, click_h,
+							model->get_score(),
+							available_briks,
+							explosive_nodes
+						);
 						
 						explosive_nodes->clear();
 						delete explosive_nodes;
 					}
-					available_briks->push_back(std::pair<int, int>(click_w, click_h));
-					view->synchronize(model->color_matrix, model->get_score(), available_briks);
+					else
+						view->synchronize(
+							model->color_matrix,
+							view->field_view,
+							pair.first, pair.second,
+							click_w, click_h,
+							model->get_score(),
+							available_briks
+						);
 
 					click_w = -1, click_h = -1;
 					available_briks->clear();

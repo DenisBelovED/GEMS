@@ -12,7 +12,10 @@ public:
 	~GameController();
 	std::pair<int, int> search_strike(std::vector<std::vector<ViewEntity*>>* field_view);
 
-	enum size_t { background = 0, char1, char2, char3, char4, cell, glass, glass_lime };
+	enum size_t { 
+		background = 0, char1, char2, char3, char4, cell, glass, glass_lime, 
+		sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8
+	};
 	size_t 
 		left_edge = (size_t)BIAS_X,
 		size_tup_edge = (size_t)BIAS_Y,

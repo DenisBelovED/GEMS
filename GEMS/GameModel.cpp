@@ -63,10 +63,12 @@ std::vector<Node*>* GameModel::swap(size_t x1, size_t y1, size_t x2, size_t y2)
 
 	size_t d1 = explosion(node1);
 	size_t d2 = explosion(node2);
-	for (auto& n : *components->get_component_by_node(node1))
-		explosive->push_back(n);
-	for (auto& n : *components->get_component_by_node(node2))
-		explosive->push_back(n);
+	if (d1 > 0)
+		for (auto& n : *components->get_component_by_node(node1))
+			explosive->push_back(n);
+	if (d2 > 0)
+		for (auto& n : *components->get_component_by_node(node2))
+			explosive->push_back(n);
 	score += d1 + d2;
 	return explosive;
 }
