@@ -7,8 +7,8 @@ GameModel::GameModel()
 	color_matrix = new std::vector<std::vector<Node*>>();
 
 	// Создание генератора случайных чисел
-	std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-	std::uniform_int_distribution<size_t> color_distribution(1, COLOR_COUNT);
+	rng = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
+	clamp = std::uniform_int_distribution<size_t>(1, COLOR_COUNT);
 	
 	// Инициализация игрового поля размера G_WIDTH x G_HEIGHT, и построение компонент связности
 	// Цикл рвётся, если компонент связности > 1 и существуют ходы
@@ -18,7 +18,7 @@ GameModel::GameModel()
 		{
 			color_matrix->push_back(std::vector<Node*>());
 			for (size_t j = 0; j < G_WIDTH; j++)
-				(*color_matrix)[i].push_back(new Node(j, i, color_distribution(rng)));
+				(*color_matrix)[i].push_back(new Node(j, i, clamp(rng)));
 		}
 
 		components = new ConnectivityComponents(color_matrix);
@@ -73,21 +73,52 @@ std::vector<Node*>* GameModel::swap(size_t x1, size_t y1, size_t x2, size_t y2)
 	return explosive;
 }
 
-std::vector<std::vector<std::vector<Node*>>>* GameModel::apply_gravity(
+std::vector<std::vector<std::vector<size_t>>>* GameModel::apply_gravity(
 	std::vector<Node*>* exploded_nodes
 )
 {
-	std::map<size_t, std::vector<Node*>*> change_columns;
+	std::unordered_set<size_t> change_columns;
+	auto snapshots = new std::vector<std::vector<std::vector<size_t>>>();
+
 	for (auto& n : *exploded_nodes)
-		if (change_columns.find(n->_y) != change_columns.end())
-			change_columns[n->_y]->push_back(n);
-		else
+		change_columns.insert(n->_y);
+
+	auto out_condition = [exploded_nodes] () -> bool {
+		for (auto& n : *exploded_nodes)
+			if (n->_color == EXPLOSION)
+				return true;
+		return false;
+	};
+
+	size_t snapshot_index = 0;
+	while (out_condition())
+	{
+		snapshots->push_back(std::vector<std::vector<size_t>>());
+		for (auto w : change_columns)
 		{
-			auto ptr = new std::vector<Node*>();
-			ptr->push_back(n);
-			change_columns[n->_y] = ptr;
+			for (size_t h = G_HEIGHT - 1; h > 0; h--)
+				if (((*color_matrix)[w][h]->_color == EXPLOSION) &&
+					((*color_matrix)[w][h - 1]->_color != EXPLOSION))
+				{
+					(*color_matrix)[w][h]->_color = (*color_matrix)[w][h - 1]->_color;
+					(*color_matrix)[w][h - 1]->_color = EXPLOSION;
+				}
+			if ((*color_matrix)[w][0]->_color == EXPLOSION)
+				(*color_matrix)[w][0]->_color = clamp(rng);
 		}
-	return nullptr;
+
+		for (size_t i = 0; i < G_HEIGHT; i++)
+		{
+			(*snapshots)[snapshot_index].push_back(std::vector<size_t>());
+			for (size_t j = 0; j < G_WIDTH; j++)
+				(*snapshots)[snapshot_index][i].push_back((*color_matrix)[i][j]->_color);
+		}
+		snapshot_index++;
+	}
+
+	if (snapshots->size() > 0)
+		components->update_components(color_matrix);
+	return snapshots;
 }
 
 bool GameModel::moves_exist()

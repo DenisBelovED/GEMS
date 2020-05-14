@@ -3,7 +3,6 @@
 #include <vector>
 #include <random>
 #include <chrono>
-#include <map>
 #include "Constants.h"
 #include "ConnectivityComponents.h"
 #include "Node.h"
@@ -15,10 +14,12 @@ public:
 	~GameModel();
 	size_t get_score();
 	std::vector<Node*>* swap(size_t x1, size_t y1, size_t x2, size_t y2);
-	std::vector<std::vector<std::vector<Node*>>>* apply_gravity(std::vector<Node*>* exploded_nodes);
+	std::vector<std::vector<std::vector<size_t>>>* apply_gravity(std::vector<Node*>* exploded_nodes);
 
 	std::vector<std::vector<Node*>>* color_matrix = nullptr;
 private:
+	std::mt19937 rng;
+	std::uniform_int_distribution<size_t> clamp;
 	size_t score;
 	ConnectivityComponents* components = nullptr;
 	bool moves_exist();

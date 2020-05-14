@@ -31,6 +31,7 @@ public:
 		std::vector<std::pair<int, int>>* selected_briks,
 		std::vector<Node*>* explosive_nodes = nullptr
 	);
+	void gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snapshots);
 
 	ViewEntity* background_view = nullptr;
 	ViewEntity* explosive_animation = nullptr;

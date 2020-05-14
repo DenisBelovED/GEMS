@@ -149,8 +149,8 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						);
 
 						auto color_snapshots = model->apply_gravity(exploded_nodes);
-						
-
+						//if (color_snapshots->size() > 0)
+						//	view->gravity_shift(color_snapshots);
 
 						exploded_nodes->clear();
 						for (auto& m : *color_snapshots)
