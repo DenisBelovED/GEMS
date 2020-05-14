@@ -207,7 +207,6 @@ void GameView::synchronize(
 	for (int h = 0; h < G_HEIGHT; h++)
 		for (int w = 0; w < G_WIDTH; w++)
 		{
-			// TODO animation
 			if ((*color_matrix)[w][h]->_color == EXPLOSION)
 			{
 				(*field_view)[w][h]->clear_render_stack();

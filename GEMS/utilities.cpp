@@ -136,7 +136,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						((pair.first == (click_w)) && (pair.second == (click_h - 1))) ||
 						((pair.first == (click_w)) && (pair.second == (click_h + 1))))
 					{
-						auto explosive_nodes = model->swap(pair.first, pair.second, click_w, click_h);
+						auto exploded_nodes = model->swap(pair.first, pair.second, click_w, click_h);
 
 						view->synchronize(
 							model->color_matrix,
@@ -145,11 +145,23 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 							click_w, click_h,
 							model->get_score(),
 							available_briks,
-							explosive_nodes
+							exploded_nodes
 						);
+
+						auto color_snapshots = model->apply_gravity(exploded_nodes);
 						
-						explosive_nodes->clear();
-						delete explosive_nodes;
+
+
+						exploded_nodes->clear();
+						for (auto& m : *color_snapshots)
+						{
+							for (auto& l : m)
+								l.clear();
+							m.clear();
+						}
+						color_snapshots->clear();
+						delete color_snapshots;
+						delete exploded_nodes;
 					}
 					else
 						view->synchronize(

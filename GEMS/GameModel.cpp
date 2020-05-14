@@ -73,6 +73,23 @@ std::vector<Node*>* GameModel::swap(size_t x1, size_t y1, size_t x2, size_t y2)
 	return explosive;
 }
 
+std::vector<std::vector<std::vector<Node*>>>* GameModel::apply_gravity(
+	std::vector<Node*>* exploded_nodes
+)
+{
+	std::map<size_t, std::vector<Node*>*> change_columns;
+	for (auto& n : *exploded_nodes)
+		if (change_columns.find(n->_y) != change_columns.end())
+			change_columns[n->_y]->push_back(n);
+		else
+		{
+			auto ptr = new std::vector<Node*>();
+			ptr->push_back(n);
+			change_columns[n->_y] = ptr;
+		}
+	return nullptr;
+}
+
 bool GameModel::moves_exist()
 {
 	if (components->get_count() <= 1)
