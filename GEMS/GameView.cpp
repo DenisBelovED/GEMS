@@ -163,21 +163,6 @@ void GameView::synchronize(
 	rendering_all();
 	
 	if ((explosive_nodes) && (explosive_nodes->size() > 0))
-	{
-		if ((*color_matrix)[x1][y1]->_color != EXPLOSION)
-		{
-			(*field_view)[x1][y1]->change_top_texture((*color_matrix)[x1][y1]->_color);
-			(*field_view)[x2][y2]->change_top_texture((*color_matrix)[x2][y2]->_color);
-		}
-		else
-		{
-			(*field_view)[x1][y1]->pop_from_render_stack();
-			(*field_view)[x2][y2]->pop_from_render_stack();
-		}
-		add_to_rendering_queue((*field_view)[x1][y1]);
-		add_to_rendering_queue((*field_view)[x2][y2]);
-		rendering_all();
-
 		for (int t_id = 8; t_id < 16; t_id++)
 		{
 			for (auto& n : *explosive_nodes)
@@ -204,7 +189,6 @@ void GameView::synchronize(
 			}
 			rendering_all();
 		}
-	}
 
 	SDL_RenderClear(render);
 	add_to_rendering_queue(background_view);
@@ -238,14 +222,21 @@ void GameView::gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snap
 	{
 		SDL_RenderClear(render);
 		add_to_rendering_queue(background_view);
-		for (int h = 0; h < G_HEIGHT; h++)
-			for (int w = 0; w < G_WIDTH; w++)
+		for (int w = 0; w < G_WIDTH; w++)
+			for (int h = 0; h < G_HEIGHT; h++)
 			{
+				size_t v_s = (*field_view)[w][h]->get_ordered_content()->size();
 				if (matrix[w][h] != EXPLOSION)
-					(*field_view)[w][h]->change_top_texture(matrix[w][h]);
+					if (v_s == 1)
+						(*field_view)[w][h]->add_layer(matrix[w][h]);
+					else
+						(*field_view)[w][h]->change_top_texture(matrix[w][h]);
+				else
+					if (v_s == 2)
+						(*field_view)[w][h]->pop_from_render_stack();
 				add_to_rendering_queue((*field_view)[w][h]);
 			}
 		rendering_all();
-		SDL_Delay(1000);
+		SDL_Delay(100);
 	}
 }

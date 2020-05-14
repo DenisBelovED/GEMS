@@ -9,7 +9,15 @@ class ViewEntity
 public:
 	void push_in_render_stack(size_t texture_id, std::shared_ptr<SDL_Rect> dst_rect)
 	{
-		rendering_order->push_back(std::tuple<size_t, std::shared_ptr<SDL_Rect>>(texture_id, dst_rect));
+		rendering_order->push_back(
+			std::tuple<size_t, std::shared_ptr<SDL_Rect>>(texture_id, dst_rect)
+		);
+	}
+	void add_layer(size_t texture_id)
+	{
+		rendering_order->push_back(
+			std::tuple<size_t, std::shared_ptr<SDL_Rect>>(texture_id, view_rect)
+		);
 	}
 	void pop_from_render_stack()
 	{
