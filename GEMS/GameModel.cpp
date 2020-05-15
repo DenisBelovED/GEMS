@@ -231,6 +231,11 @@ std::vector<Node*>* GameModel::repaint()
 	(*color_matrix)[x2][y2]->_color = (*color_matrix)[x][y]->_color;
 	(*color_matrix)[x][y]->_color = color_clamp(rng);
 	components->update_components(color_matrix);
+	auto res = new std::vector<Node*>();
+	res->push_back((*color_matrix)[x][y]);
+	res->push_back((*color_matrix)[x1][y1]);
+	res->push_back((*color_matrix)[x2][y2]);
+	return res;
 }
 
 std::vector<Node*>* GameModel::bomb()

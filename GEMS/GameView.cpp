@@ -108,6 +108,36 @@ void GameView::add_to_rendering_queue(ViewEntity* ve)
 	render_queue->push(ve);
 }
 
+void GameView::render_animation(std::vector<Node*>* explosive_nodes, size_t s_range, size_t e_range)
+{
+	for (size_t t_id = s_range; t_id <= e_range; t_id++)
+	{
+		for (auto& n : *explosive_nodes)
+		{
+			(*field_view)[n->_y][n->_x]->push_in_render_stack(
+				t_id,
+				init_shared_rect(
+					n->_y * BRIK_WIDTH + BIAS_X,
+					n->_x * BRIK_HEIGHT + BIAS_Y,
+					BRIK_WIDTH,
+					BRIK_HEIGHT
+				)
+			);
+			add_to_rendering_queue((*field_view)[n->_y][n->_x]);
+		}
+		rendering_all();
+
+		SDL_Delay(30);
+
+		for (auto& n : *explosive_nodes)
+		{
+			(*field_view)[n->_y][n->_x]->pop_from_render_stack();
+			add_to_rendering_queue((*field_view)[n->_y][n->_x]);
+		}
+		rendering_all();
+	}
+}
+
 void GameView::rendering_entity(ViewEntity* ve)
 {
 	for (auto& tuple : *(ve->get_ordered_content()))
@@ -148,7 +178,7 @@ void GameView::rendering_score(int score)
 
 void GameView::synchronize(
 	std::vector<std::vector<Node*>>* color_matrix,
-	size_t score,
+	size_t score, size_t s_range, size_t e_range,
 	std::vector<std::pair<int, int>>* selected_briks,
 	std::vector<Node*>* explosive_nodes
 )
@@ -164,33 +194,8 @@ void GameView::synchronize(
 	}
 	
 	if ((explosive_nodes) && (explosive_nodes->size() > 0))
-		for (int t_id = 8; t_id < 16; t_id++)
-		{
-			for (auto& n : *explosive_nodes)
-			{
-				(*field_view)[n->_y][n->_x]->push_in_render_stack(
-					t_id,
-					init_shared_rect(
-						n->_y * BRIK_WIDTH + BIAS_X,
-						n->_x * BRIK_HEIGHT + BIAS_Y,
-						BRIK_WIDTH,
-						BRIK_HEIGHT
-					)
-				);
-				add_to_rendering_queue((*field_view)[n->_y][n->_x]);
-			}
-			rendering_all();
-
-			SDL_Delay(20);
-
-			for (auto& n : *explosive_nodes)
-			{
-				(*field_view)[n->_y][n->_x]->pop_from_render_stack();
-				add_to_rendering_queue((*field_view)[n->_y][n->_x]);
-			}
-			rendering_all();
-		}
-
+		render_animation(explosive_nodes, s_range, e_range);
+		
 	SDL_RenderClear(render);
 	add_to_rendering_queue(background_view);
 	for (int h = 0; h < G_HEIGHT; h++)

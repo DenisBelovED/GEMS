@@ -20,12 +20,13 @@ public:
 	void clear_render();
 	void rendering_all();
 	void add_to_rendering_queue(ViewEntity* ve);
+	void render_animation(std::vector<Node*>* explosive_nodes, size_t s_range, size_t e_range);
 	void rendering_entity(ViewEntity* ve);
 	SDL_Texture* get_texture(size_t texture_id);
 	void rendering_score(int score);
 	void synchronize(
 		std::vector<std::vector<Node*>>* color_matrix, 
-		size_t score, 
+		size_t score, size_t s_range, size_t e_range,
 		std::vector<std::pair<int, int>>* selected_briks = nullptr,
 		std::vector<Node*>* explosive_nodes = nullptr
 	);
@@ -52,7 +53,15 @@ private:
 		{"spiral5", 12},
 		{"spiral6", 13},
 		{"spiral7", 14},
-		{"spiral8", 15}
+		{"spiral8", 15},
+		{"smooth1", 16},
+		{"smooth2", 17},
+		{"smooth3", 18},
+		{"smooth4", 19},
+		{"smooth5", 20},
+		{"smooth6", 21},
+		{"smooth7", 22},
+		{"smooth8", 23}
 	};
 	std::queue<ViewEntity*>* render_queue = nullptr;
 	std::map<size_t, SDL_Texture*>* texture_map = nullptr;

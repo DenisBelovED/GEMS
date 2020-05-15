@@ -161,6 +161,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 							view->synchronize(
 								model->color_matrix,
 								model->get_score(),
+								controller->sp1, controller->sp8,
 								available_briks,
 								exploded_nodes
 							);
@@ -178,14 +179,22 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						if (useful_movement)
 							do
 							{
-								/*if (model->random_event(50))
+								if (model->random_event(50))
 								{
 									std::vector<Node*>* exploded_n = nullptr;
-									model->repaint();
-									
+									exploded_n = model->repaint();
+
+									view->synchronize(
+										model->color_matrix,
+										model->get_score(),
+										controller->sm1, controller->sm8,
+										nullptr,
+										exploded_n
+									);
+
 									exploded_n->clear();
 									delete exploded_n;
-								}*/
+								}
 								if (model->random_event(50))
 								{
 									std::vector<Node*>* exploded_n = nullptr;
@@ -193,6 +202,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 									view->synchronize(
 										model->color_matrix,
 										model->get_score(),
+										controller->sm1, controller->sm8,
 										nullptr,
 										exploded_n
 									);
@@ -212,6 +222,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						view->synchronize(
 							model->color_matrix,
 							model->get_score(),
+							controller->sp1, controller->sp8,
 							available_briks
 						);
 						available_briks->clear();
@@ -221,13 +232,6 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 
 					click_w = -1, click_h = -1;
 				}
-
-				/*if (view->restart_view->strike(
-					controller->windowEvent->button.x,
-					controller->windowEvent->button.y))
-				{
-					// TODO restart
-				}*/
 				break;
 			case SDL_QUIT:
 				LOOP_FLAG = false;

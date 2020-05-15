@@ -14,7 +14,8 @@ public:
 
 	enum size_t { 
 		background = 0, char1, char2, char3, char4, cell, glass, glass_lime, 
-		sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8
+		sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8,
+		sm1, sm2, sm3, sm4, sm5, sm6, sm7, sm8
 	};
 	size_t 
 		left_edge = (size_t)BIAS_X,
