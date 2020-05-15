@@ -5,7 +5,6 @@ int main(int, char**)
 	if ((bool)SDL_Init(SDL_INIT_EVERYTHING))
 		return -1;
 
-	// TODO shared_ptr
 	GameModel* model = new GameModel();
 	GameView* view = new GameView();
 	GameController* controller = new GameController();

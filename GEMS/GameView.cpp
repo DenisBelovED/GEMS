@@ -1,8 +1,8 @@
 #include "GameView.h"
+#include "utilities.h"
 
 #ifdef _DEBUG
 #include <iostream>
-#include "utilities.h"
 #endif // _DEBUG
 
 GameView::GameView()
