@@ -121,6 +121,41 @@ std::vector<std::vector<std::vector<size_t>>>* GameModel::apply_gravity(
 	return snapshots;
 }
 
+bool GameModel::explosion_at_impact(std::vector<Node*>* &exploded_nodes)
+{
+	auto explosive = new std::vector<Node*>();
+	std::map<size_t, Node*> impact_nodes;
+
+	for (auto& n : *exploded_nodes)
+	{
+		if (impact_nodes.find(n->_y) != impact_nodes.end())
+		{
+			if (impact_nodes[n->_y]->_x < n->_x)
+				impact_nodes[n->_y] = n;
+		}
+		else
+			impact_nodes[n->_y] = n;
+	}
+
+	for (auto item : impact_nodes)
+	{
+		if (item.second->_color != EXPLOSION)
+		{
+			size_t d = explosion(item.second);
+			if (d > 0)
+				for (auto& n : *components->get_component_by_node(item.second))
+					explosive->push_back(n);
+			score += d;
+		}
+	}
+	
+	exploded_nodes->clear();
+	delete exploded_nodes;
+	exploded_nodes = explosive;
+
+	return (bool)(explosive->size());
+}
+
 bool GameModel::moves_exist()
 {
 	if (components->get_count() <= 1)

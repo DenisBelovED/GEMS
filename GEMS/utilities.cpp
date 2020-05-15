@@ -138,45 +138,55 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 					{
 						auto exploded_nodes = model->swap(pair.first, pair.second, click_w, click_h);
 
-						view->synchronize(
-							model->color_matrix,
-							view->field_view,
-							pair.first, pair.second,
-							click_w, click_h,
-							model->get_score(),
-							available_briks,
-							exploded_nodes
-						);
-
-						auto color_snapshots = model->apply_gravity(exploded_nodes);
-						if (color_snapshots->size() > 0)
-							view->gravity_shift(color_snapshots);
-
-						exploded_nodes->clear();
-						for (auto& m : *color_snapshots)
+						do
 						{
-							for (auto& l : m)
-								l.clear();
-							m.clear();
-						}
-						color_snapshots->clear();
-						delete color_snapshots;
+							view->synchronize(
+								model->color_matrix,
+								view->field_view,
+								model->get_score(),
+								available_briks,
+								exploded_nodes
+							);
+							if (available_briks) 
+							{
+								available_briks->clear();
+								delete available_briks;
+								available_briks = nullptr;
+							}
+
+							auto color_snapshots = model->apply_gravity(exploded_nodes);
+
+							if (color_snapshots->size() > 0)
+								view->gravity_shift(color_snapshots, model->get_score());
+
+							for (auto& m : *color_snapshots)
+							{
+								for (auto& l : m)
+									l.clear();
+								m.clear();
+							}
+							color_snapshots->clear();
+							delete color_snapshots;
+
+						} while (model->explosion_at_impact(exploded_nodes));
+						
+						exploded_nodes->clear();
 						delete exploded_nodes;
 					}
 					else
+					{
 						view->synchronize(
 							model->color_matrix,
 							view->field_view,
-							pair.first, pair.second,
-							click_w, click_h,
 							model->get_score(),
 							available_briks
 						);
+						available_briks->clear();
+						delete available_briks;
+						available_briks = nullptr;
+					}
 
 					click_w = -1, click_h = -1;
-					available_briks->clear();
-					delete available_briks;
-					available_briks = nullptr;
 				}
 
 				/*if (view->restart_view->strike(

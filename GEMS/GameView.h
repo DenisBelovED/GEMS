@@ -26,12 +26,11 @@ public:
 	void synchronize(
 		std::vector<std::vector<Node*>>* color_matrix, 
 		std::vector<std::vector<ViewEntity*>>* field_view,
-		int x1, int y1, int x2, int y2,
 		size_t score, 
-		std::vector<std::pair<int, int>>* selected_briks,
+		std::vector<std::pair<int, int>>* selected_briks = nullptr,
 		std::vector<Node*>* explosive_nodes = nullptr
 	);
-	void gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snapshots);
+	void gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snapshots, size_t score);
 
 	ViewEntity* background_view = nullptr;
 	ViewEntity* explosive_animation = nullptr;

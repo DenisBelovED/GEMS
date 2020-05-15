@@ -149,18 +149,20 @@ void GameView::rendering_score(int score)
 void GameView::synchronize(
 	std::vector<std::vector<Node*>>* color_matrix,
 	std::vector<std::vector<ViewEntity*>>* field_view,
-	int x1, int y1, int x2, int y2,
 	size_t score,
 	std::vector<std::pair<int, int>>* selected_briks,
 	std::vector<Node*>* explosive_nodes
 )
 {
-	for (auto& pair : *selected_briks)
+	if (selected_briks)
 	{
-		(*field_view)[pair.first][pair.second]->pop_from_render_stack();
-		add_to_rendering_queue((*field_view)[pair.first][pair.second]);
+		for (auto& pair : *selected_briks)
+		{
+			(*field_view)[pair.first][pair.second]->pop_from_render_stack();
+			add_to_rendering_queue((*field_view)[pair.first][pair.second]);
+		}
+		rendering_all();
 	}
-	rendering_all();
 	
 	if ((explosive_nodes) && (explosive_nodes->size() > 0))
 		for (int t_id = 8; t_id < 16; t_id++)
@@ -216,7 +218,7 @@ void GameView::synchronize(
 	rendering_score(score);
 }
 
-void GameView::gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snapshots)
+void GameView::gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snapshots, size_t score)
 {
 	for (auto& matrix : *snapshots)
 	{
@@ -237,6 +239,7 @@ void GameView::gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snap
 				add_to_rendering_queue((*field_view)[w][h]);
 			}
 		rendering_all();
+		rendering_score(score);
 		SDL_Delay(100);
 	}
 }

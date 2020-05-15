@@ -3,6 +3,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <map>
 #include "Constants.h"
 #include "ConnectivityComponents.h"
 #include "Node.h"
@@ -15,6 +16,7 @@ public:
 	size_t get_score();
 	std::vector<Node*>* swap(size_t x1, size_t y1, size_t x2, size_t y2);
 	std::vector<std::vector<std::vector<size_t>>>* apply_gravity(std::vector<Node*>* exploded_nodes);
+	bool explosion_at_impact(std::vector<Node*>* &exploded_nodes);
 
 	std::vector<std::vector<Node*>>* color_matrix = nullptr;
 private:
