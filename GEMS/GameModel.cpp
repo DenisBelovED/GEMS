@@ -8,7 +8,7 @@ GameModel::GameModel()
 
 	// Создание генератора случайных чисел
 	rng = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
-	clamp = std::uniform_int_distribution<size_t>(1, COLOR_COUNT);
+	color_clamp = std::uniform_int_distribution<size_t>(1, COLOR_COUNT);
 	
 	// Инициализация игрового поля размера G_WIDTH x G_HEIGHT, и построение компонент связности
 	// Цикл рвётся, если компонент связности > 1 и существуют ходы
@@ -18,7 +18,7 @@ GameModel::GameModel()
 		{
 			color_matrix->push_back(std::vector<Node*>());
 			for (size_t j = 0; j < G_WIDTH; j++)
-				(*color_matrix)[i].push_back(new Node(j, i, clamp(rng)));
+				(*color_matrix)[i].push_back(new Node(j, i, color_clamp(rng)));
 		}
 
 		components = new ConnectivityComponents(color_matrix);
@@ -83,15 +83,16 @@ std::vector<std::vector<std::vector<size_t>>>* GameModel::apply_gravity(
 	for (auto& n : *exploded_nodes)
 		change_columns.insert(n->_y);
 
-	auto out_condition = [exploded_nodes] () -> bool {
-		for (auto& n : *exploded_nodes)
-			if (n->_color == EXPLOSION)
-				return true;
+	auto out_condition = [](std::vector<std::vector<Node*>>* color_matrix) -> bool {
+		for (auto& l : *color_matrix)
+			for (auto& n : l)
+				if (n->_color == EXPLOSION)
+					return true;
 		return false;
 	};
 
 	size_t snapshot_index = 0;
-	while (out_condition())
+	while (out_condition(color_matrix))
 	{
 		snapshots->push_back(std::vector<std::vector<size_t>>());
 		for (auto w : change_columns)
@@ -104,7 +105,7 @@ std::vector<std::vector<std::vector<size_t>>>* GameModel::apply_gravity(
 					(*color_matrix)[w][h - 1]->_color = EXPLOSION;
 				}
 			if ((*color_matrix)[w][0]->_color == EXPLOSION)
-				(*color_matrix)[w][0]->_color = clamp(rng);
+				(*color_matrix)[w][0]->_color = color_clamp(rng);
 		}
 
 		for (size_t i = 0; i < G_HEIGHT; i++)
@@ -181,6 +182,75 @@ bool GameModel::moves_exist()
 				return true;
 		}
 	return false;
+}
+
+bool GameModel::random_event(size_t percent_bias)
+{
+	return (get_random(100) % 100) <= percent_bias;
+}
+
+size_t GameModel::get_random(size_t max)
+{
+	std::uniform_int_distribution<size_t> range(0, max);
+	return range(rng);
+}
+
+std::vector<Node*>* GameModel::repaint()
+{
+	size_t x = 1 + (size_t)(get_random(100) % (G_WIDTH - 2));
+	size_t y = 1 + (size_t)(get_random(100) % (G_HEIGHT - 2));
+	size_t x1, y1, x2, y2;
+	switch (get_random(100) % 4)
+	{
+	case 0:
+		x1 = x - 1;
+		x2 = x - 1;
+		y1 = y + 1;
+		y2 = y - 1;
+		break;
+	case 1:
+		x1 = x - 1;
+		x2 = x + 1;
+		y1 = y - 1;
+		y2 = y - 1;
+		break;
+	case 2:
+		x1 = x + 1;
+		x2 = x + 1;
+		y1 = y + 1;
+		y2 = y - 1;
+		break;
+	case 3:
+		x1 = x - 1;
+		x2 = x + 1;
+		y1 = y + 1;
+		y2 = y + 1;
+		break;
+	}
+	(*color_matrix)[x1][y1]->_color = (*color_matrix)[x][y]->_color;
+	(*color_matrix)[x2][y2]->_color = (*color_matrix)[x][y]->_color;
+	(*color_matrix)[x][y]->_color = color_clamp(rng);
+	components->update_components(color_matrix);
+}
+
+std::vector<Node*>* GameModel::bomb()
+{
+	auto explosive = new std::vector<Node*>();
+	std::unordered_set<size_t> u_set_x, u_set_y;
+	for (int i = 0; i < 5; i++)
+	{
+		size_t x, y;
+		do
+		{
+			x = get_random(100) % G_WIDTH;
+			y = get_random(100) % G_HEIGHT;
+		} while ((u_set_x.find(x) != u_set_x.end()) && (u_set_y.find(y) != u_set_y.end()));
+		u_set_x.insert(x);
+		u_set_y.insert(y);
+		(*color_matrix)[x][y]->_color = EXPLOSION;
+		explosive->push_back((*color_matrix)[x][y]);
+	}
+	return explosive;
 }
 
 bool GameModel::swapable(Node* node1, Node* node2)

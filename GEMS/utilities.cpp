@@ -44,6 +44,23 @@ std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height)
 	return std::shared_ptr<SDL_Rect>(r);
 }
 
+void compose_gravity_fall(GameModel* &model, GameView* &view, std::vector<Node*>* &exploded_nodes)
+{
+	auto color_snapshots = model->apply_gravity(exploded_nodes);
+
+	if (color_snapshots->size() > 0)
+		view->gravity_shift(color_snapshots, model->get_score());
+
+	for (auto& m : *color_snapshots)
+	{
+		for (auto& l : m)
+			l.clear();
+		m.clear();
+	}
+	color_snapshots->clear();
+	delete color_snapshots;
+}
+
 void game_loop(GameModel* model, GameView* view, GameController* controller)
 {
 	bool LOOP_FLAG = true;
@@ -137,12 +154,12 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						((pair.first == (click_w)) && (pair.second == (click_h + 1))))
 					{
 						auto exploded_nodes = model->swap(pair.first, pair.second, click_w, click_h);
+						bool useful_movement = (bool)exploded_nodes->size();
 
 						do
 						{
 							view->synchronize(
 								model->color_matrix,
-								view->field_view,
 								model->get_score(),
 								available_briks,
 								exploded_nodes
@@ -154,21 +171,38 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 								available_briks = nullptr;
 							}
 
-							auto color_snapshots = model->apply_gravity(exploded_nodes);
-
-							if (color_snapshots->size() > 0)
-								view->gravity_shift(color_snapshots, model->get_score());
-
-							for (auto& m : *color_snapshots)
-							{
-								for (auto& l : m)
-									l.clear();
-								m.clear();
-							}
-							color_snapshots->clear();
-							delete color_snapshots;
+							compose_gravity_fall(model, view, exploded_nodes);
 
 						} while (model->explosion_at_impact(exploded_nodes));
+						
+						if (useful_movement)
+							do
+							{
+								/*if (model->random_event(50))
+								{
+									std::vector<Node*>* exploded_n = nullptr;
+									model->repaint();
+									
+									exploded_n->clear();
+									delete exploded_n;
+								}*/
+								if (model->random_event(50))
+								{
+									std::vector<Node*>* exploded_n = nullptr;
+									exploded_n = model->bomb();
+									view->synchronize(
+										model->color_matrix,
+										model->get_score(),
+										nullptr,
+										exploded_n
+									);
+
+									compose_gravity_fall(model, view, exploded_n);
+
+									exploded_n->clear();
+									delete exploded_n;
+								}
+							} while (!model->moves_exist());
 						
 						exploded_nodes->clear();
 						delete exploded_nodes;
@@ -177,7 +211,6 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 					{
 						view->synchronize(
 							model->color_matrix,
-							view->field_view,
 							model->get_score(),
 							available_briks
 						);

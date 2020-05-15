@@ -19,3 +19,5 @@ void accessible_eqal_neighbors(
 void game_loop(GameModel* model, GameView* view, GameController* controller);
 
 std::shared_ptr<SDL_Rect> init_shared_rect(int x, int y, int width, int height);
+
+void compose_gravity_fall(GameModel* &model, GameView* &view, std::vector<Node*>* &exploded_nodes);

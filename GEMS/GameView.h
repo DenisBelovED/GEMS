@@ -25,7 +25,6 @@ public:
 	void rendering_score(int score);
 	void synchronize(
 		std::vector<std::vector<Node*>>* color_matrix, 
-		std::vector<std::vector<ViewEntity*>>* field_view,
 		size_t score, 
 		std::vector<std::pair<int, int>>* selected_briks = nullptr,
 		std::vector<Node*>* explosive_nodes = nullptr
