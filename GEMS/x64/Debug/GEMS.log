@@ -1,0 +1,8 @@
+﻿  GameView.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(124,5): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(222,23): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(246,24): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  utilities.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\utilities.cpp(93,42): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  Создание кода...
+  GEMS.vcxproj -> C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\x64\Debug\GEMS.exe
