@@ -1,8 +1,46 @@
-﻿  GameView.cpp
-C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(124,5): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(222,23): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(246,24): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+﻿  ConnectivityComponents.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "2" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "3" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(17,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(20,9): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "unsigned __int64"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(20,9): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "2" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "3" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(23,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "2" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "3" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(72,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(75,9): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "unsigned __int64"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(75,9): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "2" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): message : рекомендуется использовать "%zd" в строке форматирования
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "3" имеет тип "size_t"
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(78,11): message : рекомендуется использовать "%zd" в строке форматирования
+  GameModel.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameModel.cpp(10,78): warning C4244: аргумент: преобразование "_Rep" в "unsigned int", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+  GameView.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(119,5): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(217,23): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(241,24): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  Main.cpp
   utilities.cpp
-C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\utilities.cpp(93,42): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\utilities.cpp(96,42): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
   Создание кода...
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(44): warning C4715: ConnectivityComponents::get_component_length: значение возвращается не при всех путях выполнения
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(51): warning C4715: ConnectivityComponents::get_component_by_node: значение возвращается не при всех путях выполнения
   GEMS.vcxproj -> C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\x64\Debug\GEMS.exe

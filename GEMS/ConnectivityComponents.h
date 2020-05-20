@@ -17,6 +17,8 @@ public:
 	bool from_common_component(Node* n1, Node* n2);
 	const std::vector<std::unordered_set<Node*>*>* get_nodes();
 private:
+	void DFS(std::vector<std::vector<Node*>>* nodes);
+
 	std::vector<std::unordered_set<Node*>*> components;
 };
 

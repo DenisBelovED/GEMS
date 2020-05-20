@@ -78,14 +78,17 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 	{
 		for (int w = 0; w < G_WIDTH; w++)
 		{
-			(*view->field_view)[w][h] = new ViewBrik(
-				std::vector<size_t>() = { controller->cell, (*model->color_matrix)[w][h]->_color },
-				w * BRIK_WIDTH + BIAS_X,
-				h * BRIK_HEIGHT + BIAS_Y,
-				BRIK_WIDTH,
-				BRIK_HEIGHT
-			);
-			view->add_to_rendering_queue((*view->field_view)[w][h]);
+			view->field_view->update_cell(
+				w, h, 
+				new ViewBrik(
+					std::vector<size_t>() = { controller->cell, (*model->color_matrix)[w][h]->_color },
+					w * BRIK_WIDTH + BIAS_X,
+					h * BRIK_HEIGHT + BIAS_Y,
+					BRIK_WIDTH,
+					BRIK_HEIGHT
+				)
+			); 
+			view->add_to_rendering_queue(view->field_view->get_cell(w, h));
 		}
 	}
 
@@ -114,7 +117,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 						click_w = pair.first, click_h = pair.second;
 						available_briks = accessible_neighbors(click_w, click_h);
 
-						(*view->field_view)[click_w][click_h]->push_in_render_stack(
+						view->field_view->get_cell(click_w, click_h)->push_in_render_stack(
 							controller->glass_lime,
 							init_shared_rect(
 								click_w * BRIK_WIDTH + BIAS_X,
@@ -123,11 +126,11 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 								BRIK_HEIGHT
 							)
 						);
-						view->add_to_rendering_queue((*view->field_view)[click_w][click_h]);
+						view->add_to_rendering_queue(view->field_view->get_cell(click_w, click_h));
 
 						for (auto& pair : *available_briks)
 						{
-							(*view->field_view)[pair.first][pair.second]->push_in_render_stack(
+							view->field_view->get_cell(pair.first, pair.second)->push_in_render_stack(
 								controller->glass,
 								init_shared_rect(
 									pair.first * BRIK_WIDTH + BIAS_X,
@@ -136,7 +139,7 @@ void game_loop(GameModel* model, GameView* view, GameController* controller)
 									BRIK_HEIGHT
 								)
 							);
-							view->add_to_rendering_queue((*view->field_view)[pair.first][pair.second]);
+							view->add_to_rendering_queue(view->field_view->get_cell(pair.first, pair.second));
 						}
 
 						view->rendering_all();

@@ -8,29 +8,8 @@ ConnectivityComponents::ConnectivityComponents()
 
 ConnectivityComponents::ConnectivityComponents(std::vector<std::vector<Node*>>* nodes)
 {
-	for (auto& line : *nodes)
-		for (auto& node : line)
-			if (!node->visited)
-			{
-				std::unordered_set<Node*>* component = new std::unordered_set<Node*>();
-				std::queue<Node*> queue;
-				queue.push(node);
+	DFS(nodes);
 
-				while (!queue.empty())
-				{
-					Node* n = queue.front();
-					queue.pop();
-					n->visited = true;
-					component->insert(n);
-
-					auto accessible_nodes = new std::vector<Node*>();
-					accessible_eqal_neighbors(n, *nodes, accessible_nodes);
-					for (auto n : *accessible_nodes)
-						queue.push(n);
-				}
-
-				components.push_back(component);
-			}
 #ifdef _DEBUG
 	for (size_t i = 0; i < G_HEIGHT; i++)
 	{
@@ -84,29 +63,8 @@ void ConnectivityComponents::update_components(std::vector<std::vector<Node*>>* 
 	}
 	components.clear();
 
-	for (auto& line : *nodes)
-		for (auto& node : line)
-			if (!node->visited)
-			{
-				std::unordered_set<Node*>* component = new std::unordered_set<Node*>();
-				std::queue<Node*> queue;
-				queue.push(node);
-
-				while (!queue.empty())
-				{
-					Node* n = queue.front();
-					queue.pop();
-					n->visited = true;
-					component->insert(n);
-
-					auto accessible_nodes = new std::vector<Node*>();
-					accessible_eqal_neighbors(n, *nodes, accessible_nodes);
-					for (auto n : *accessible_nodes)
-						queue.push(n);
-				}
-
-				components.push_back(component);
-			}
+	DFS(nodes);
+	
 #ifdef _DEBUG
 	for (size_t i = 0; i < G_HEIGHT; i++)
 	{
@@ -132,4 +90,31 @@ bool ConnectivityComponents::from_common_component(Node* n1, Node* n2)
 const std::vector<std::unordered_set<Node*>*>* ConnectivityComponents::get_nodes()
 {
 	return &components;
+}
+
+void ConnectivityComponents::DFS(std::vector<std::vector<Node*>>* nodes)
+{
+	for (auto& line : *nodes)
+		for (auto& node : line)
+			if (!node->visited)
+			{
+				std::unordered_set<Node*>* component = new std::unordered_set<Node*>();
+				std::queue<Node*> queue;
+				queue.push(node);
+
+				while (!queue.empty())
+				{
+					Node* n = queue.front();
+					queue.pop();
+					n->visited = true;
+					component->insert(n);
+
+					auto accessible_nodes = new std::vector<Node*>();
+					accessible_eqal_neighbors(n, *nodes, accessible_nodes);
+					for (auto n : *accessible_nodes)
+						queue.push(n);
+				}
+
+				components.push_back(component);
+			}
 }

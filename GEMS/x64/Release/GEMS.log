@@ -1,6 +1,21 @@
-﻿  Создание кода
-  0 of 1708 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+﻿  ConnectivityComponents.cpp
+  GameModel.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameModel.cpp(10,78): warning C4244: аргумент: преобразование "_Rep" в "unsigned int", возможна потеря данных
+          with
+          [
+              _Rep=__int64
+          ]
+  GameView.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(119,5): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(217,23): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\GameView.cpp(241,24): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  Main.cpp
+  utilities.cpp
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\utilities.cpp(96,42): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  Создание кода
+  Compiler version has changed, fall back to full compilation.
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(44): warning C4715: ConnectivityComponents::get_component_length: значение возвращается не при всех путях выполнения
+C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\GEMS\ConnectivityComponents.cpp(51): warning C4715: ConnectivityComponents::get_component_by_node: значение возвращается не при всех путях выполнения
+  All 1712 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Создание кода завершено
   GEMS.vcxproj -> C:\Users\Denis\Documents\Polytech\cpp_proj\Games\GEMS\x64\Release\GEMS.exe

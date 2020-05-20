@@ -2,6 +2,7 @@
 
 #include "Constants.h"
 #include "ViewEntity.h"
+#include "FieldView.h"
 #include <utility>
 #include <SDL.h>
 
@@ -10,7 +11,7 @@ class GameController
 public:
 	GameController();
 	~GameController();
-	std::pair<int, int> search_strike(std::vector<std::vector<ViewEntity*>>* field_view);
+	std::pair<int, int> search_strike(FieldView* field_view);
 
 	enum size_t { 
 		background = 0, char1, char2, char3, char4, cell, glass, glass_lime, 

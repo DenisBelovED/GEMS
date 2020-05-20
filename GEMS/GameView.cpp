@@ -34,10 +34,7 @@ GameView::GameView()
 #endif // _DEBUG
 
 	render_queue = new std::queue<ViewEntity*>();
-	field_view = new std::vector<std::vector<ViewEntity*>>(G_HEIGHT);
-	for (size_t i = 0; i < G_HEIGHT; i++)
-		(*field_view)[i] = std::vector<ViewEntity*>(G_WIDTH);
-
+	field_view = new FieldView();
 	wchar_t buffer_path[MAX_PATH];
 	GetModuleFileName(NULL, buffer_path, MAX_PATH);
 	std::wstring path_to_exe(buffer_path);
@@ -75,9 +72,7 @@ GameView::~GameView()
 	delete background_view;
 	delete explosive_animation;
 	delete score_view;
-	for (auto& e : *field_view)
-		for (auto& n : e)
-			delete n;
+	delete field_view;
 	for (auto& link : *texture_map)
 		SDL_DestroyTexture(link.second);
 	delete texture_map;
@@ -114,7 +109,7 @@ void GameView::render_animation(std::vector<Node*>* explosive_nodes, size_t s_ra
 	{
 		for (auto& n : *explosive_nodes)
 		{
-			(*field_view)[n->_y][n->_x]->push_in_render_stack(
+			field_view->get_cell(n->_y, n->_x)->push_in_render_stack(
 				t_id,
 				init_shared_rect(
 					n->_y * BRIK_WIDTH + BIAS_X,
@@ -123,7 +118,7 @@ void GameView::render_animation(std::vector<Node*>* explosive_nodes, size_t s_ra
 					BRIK_HEIGHT
 				)
 			);
-			add_to_rendering_queue((*field_view)[n->_y][n->_x]);
+			add_to_rendering_queue(field_view->get_cell(n->_y, n->_x));
 		}
 		rendering_all();
 
@@ -131,8 +126,8 @@ void GameView::render_animation(std::vector<Node*>* explosive_nodes, size_t s_ra
 
 		for (auto& n : *explosive_nodes)
 		{
-			(*field_view)[n->_y][n->_x]->pop_from_render_stack();
-			add_to_rendering_queue((*field_view)[n->_y][n->_x]);
+			field_view->get_cell(n->_y, n->_x)->pop_from_render_stack();
+			add_to_rendering_queue(field_view->get_cell(n->_y, n->_x));
 		}
 		rendering_all();
 	}
@@ -187,8 +182,8 @@ void GameView::synchronize(
 	{
 		for (auto& pair : *selected_briks)
 		{
-			(*field_view)[pair.first][pair.second]->pop_from_render_stack();
-			add_to_rendering_queue((*field_view)[pair.first][pair.second]);
+			field_view->get_cell(pair.first, pair.second)->pop_from_render_stack();
+			add_to_rendering_queue(field_view->get_cell(pair.first, pair.second));
 		}
 		rendering_all();
 	}
@@ -203,8 +198,8 @@ void GameView::synchronize(
 		{
 			if ((*color_matrix)[w][h]->_color == EXPLOSION)
 			{
-				(*field_view)[w][h]->clear_render_stack();
-				(*field_view)[w][h]->push_in_render_stack(
+				field_view->get_cell(w, h)->clear_render_stack();
+				field_view->get_cell(w, h)->push_in_render_stack(
 					5,
 					init_shared_rect(
 						w * BRIK_WIDTH + BIAS_X,
@@ -215,8 +210,8 @@ void GameView::synchronize(
 				);
 			}
 			else
-				(*field_view)[w][h]->change_top_texture((*color_matrix)[w][h]->_color);
-			add_to_rendering_queue((*field_view)[w][h]);
+				field_view->get_cell(w, h)->change_top_texture((*color_matrix)[w][h]->_color);
+			add_to_rendering_queue(field_view->get_cell(w, h));
 		}
 	rendering_all();
 	rendering_score(score);
@@ -231,16 +226,16 @@ void GameView::gravity_shift(std::vector<std::vector<std::vector<size_t>>>* snap
 		for (int w = 0; w < G_WIDTH; w++)
 			for (int h = 0; h < G_HEIGHT; h++)
 			{
-				size_t v_s = (*field_view)[w][h]->get_ordered_content()->size();
+				size_t v_s = field_view->get_cell(w, h)->get_ordered_content()->size();
 				if (matrix[w][h] != EXPLOSION)
 					if (v_s == 1)
-						(*field_view)[w][h]->add_layer(matrix[w][h]);
+						field_view->get_cell(w, h)->add_layer(matrix[w][h]);
 					else
-						(*field_view)[w][h]->change_top_texture(matrix[w][h]);
+						field_view->get_cell(w, h)->change_top_texture(matrix[w][h]);
 				else
 					if (v_s == 2)
-						(*field_view)[w][h]->pop_from_render_stack();
-				add_to_rendering_queue((*field_view)[w][h]);
+						field_view->get_cell(w, h)->pop_from_render_stack();
+				add_to_rendering_queue(field_view->get_cell(w, h));
 			}
 		rendering_all();
 		rendering_score(score);

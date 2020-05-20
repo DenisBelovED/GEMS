@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConnectivityComponents.cpp" />
+    <ClCompile Include="FieldView.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="GameView.cpp" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="ConnectivityComponents.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="FieldView.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="GameView.h" />

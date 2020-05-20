@@ -10,6 +10,7 @@
 #include <queue>
 #include "Constants.h"
 #include "ViewEntity.h"
+#include "FieldView.h"
 #include "Node.h"
 
 class GameView 
@@ -35,7 +36,7 @@ public:
 	ViewEntity* background_view = nullptr;
 	ViewEntity* explosive_animation = nullptr;
 	ViewEntity* score_view = nullptr;
-	std::vector<std::vector<ViewEntity*>>* field_view = nullptr;
+	FieldView* field_view = nullptr;
 private:
 	std::map<std::string, size_t> texture_enum = {
 		{"background", 0},
